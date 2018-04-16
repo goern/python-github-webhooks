@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 #
 # Copyright (C) 2014, 2015, 2016 Carlos Jenkins <carlos@jenkins.co.cr>
@@ -19,6 +20,7 @@ import logging
 from sys import stderr, hexversion
 logging.basicConfig(stream=stderr)
 
+import os
 import hmac
 from hashlib import sha1
 from json import loads, dumps
@@ -31,6 +33,15 @@ import requests
 from ipaddress import ip_address, ip_network
 from flask import Flask, request, abort
 
+
+DEBUG = bool(os.getenv('DEBUG', False))
+
+if DEBUG:
+    logging.basicConfig(level=logging.DEBUG)
+else:
+    logging.basicConfig(level=logging.INFO)
+
+logger = logging.getLogger(__name__)  # pylint: disable=invalid-name
 
 application = Flask(__name__)
 
@@ -203,4 +214,4 @@ def index():
 
 
 if __name__ == '__main__':
-    application.run(debug=True, host='0.0.0.0')
+    application.run(debug=DEBUG, host='0.0.0.0', port=8080)
